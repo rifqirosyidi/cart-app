@@ -9,6 +9,7 @@ export default class Filter extends Component {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          height: "70px",
         }}
       >
         <div style={{}}>Results: {this.props.count} Products</div>

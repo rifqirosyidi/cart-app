@@ -4,16 +4,43 @@ import data from "./data.json";
 import Filter from "./components/Filter";
 import Products from "./components/Products";
 import Navbar from "./components/Navbar";
+import Cart from "./components/Cart";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       products: data.products,
+      cartItems: [],
       ram: "",
       sort: "",
     };
   }
+
+  removeFromCart = (product) => {
+    const cartItems = this.state.cartItems.slice();
+    this.setState({
+      cartItems: cartItems.filter((item) => item.id !== product.id),
+    });
+  };
+
+  addToCart = (product) => {
+    const cartItems = this.state.cartItems.slice();
+    let alreadyInCart = false;
+    cartItems.forEach((item) => {
+      if (item.id === product.id) {
+        item.count++;
+        alreadyInCart = true;
+      }
+    });
+    if (!alreadyInCart) {
+      cartItems.push({ ...product, count: 1 });
+    }
+
+    this.setState({
+      cartItems: cartItems,
+    });
+  };
 
   sortProducts = (e) => {
     const sort = e.target.value;
@@ -70,9 +97,17 @@ class App extends Component {
                 filterRam={this.filterRam}
                 sortProducts={this.sortProducts}
               />
-              <Products products={this.state.products} />
+              <Products
+                products={this.state.products}
+                addToCart={this.addToCart}
+              />
             </div>
-            <div className="col l4 m4 s12 my-2 sidebar">Sidebar</div>
+            <div className="col l4 m4 s12 sidebar">
+              <Cart
+                cartItems={this.state.cartItems}
+                removeFromCart={this.removeFromCart}
+              />
+            </div>
           </div>
         </main>
         <footer>Footer</footer>
